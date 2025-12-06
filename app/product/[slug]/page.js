@@ -1,43 +1,47 @@
+// app/product/[slug]/page.js
 import Image from 'next/image';
 import Link from 'next/link';
-// ما یک Client Component کوچک برای انتخابگر تعداد (Quantity Selector) نیاز داریم
 import QuantitySelector from '../../../components/QuantitySelector'; 
+import { supabase } from '../../../lib/supabase'; // 👈 اضافه کردن اتصال به دیتابیس
 
 // ----------------------------------------------------
-// داده‌های تستی (جایگزین واکشی از دیتابیس یا API)
+// تابع واکشی داده از Supabase بر اساس Slug
 // ----------------------------------------------------
-const dummyProductData = {
-    id: 1,
-    name: 'بانکه سه تایی پروانه‌ای دست‌ساز',
-    slug: 'banke-parvane',
-    price: 1320000,
-    discountedPrice: 1290000,
-    category: 'بانکه',
-    stock: 5,
-    description: 'این ست بانکه سرامیکی دست‌ساز با طرح پروانه، تولیدی انحصاری گالری آیدانا است. لعاب درخشان و کیفیت پخت بالا، این محصول را برای استفاده روزمره و نگهداری انواع مواد غذایی خشک مناسب ساخته است. قابل شستشو در ماشین ظرفشویی و مقاوم در برابر حرارت ماکروفر.',
-    shortDescription: 'ظروف درب‌دار سرامیکی، شامل سه سایز مختلف، با طراحی مینیمال و رنگ‌های گرم.',
-    images: [
-        '/images/product-1.jpg',
-        '/images/product-1-side.jpg',
-        '/images/product-1-top.jpg',
-    ],
-    features: [
-        'سه سایز (کوچک، متوسط، بزرگ)',
-        'جنس: سرامیک دست‌ساز',
-        'قابلیت استفاده در ماکروفر و ماشین ظرفشویی',
-        'طراحی راست به چپ (RTL)',
-    ],
-};
+async function getProductBySlug(slug) {
+    // از متد .eq برای فیلتر کردن بر اساس ستون 'slug' استفاده می‌کنیم
+    const { data: productData, error } = await supabase
+        .from('products') 
+        .select('*')      
+        .eq('slug', slug) // فیلتر: جایی که slug در دیتابیس برابر slug دریافتی باشد
+        .single();         // انتظار داریم فقط یک نتیجه برگردد
+
+    if (error) {
+        console.error("Error fetching product:", error);
+        return null;
+    }
+    return productData;
+}
 
 // ----------------------------------------------------
 // Server Component اصلی صفحه محصول
 // ----------------------------------------------------
-export default function ProductPage({ params }) {
-    // در اینجا params.slug حاوی مقدار 'banke-parvane' است.
-    // در یک پروژه واقعی، از این slug برای واکشی داده‌های محصول از دیتابیس استفاده می‌کنیم.
+// Next.js به طور خودکار پارامترهای مسیر را در 'params' قرار می‌دهد
+export default async function ProductPage({ params }) {
     
-    const product = dummyProductData; // استفاده از داده‌های تستی
+    // واکشی داده‌های واقعی از دیتابیس
+    const product = await getProductBySlug(params.slug); 
 
+    // مدیریت خطا در صورت پیدا نشدن محصول
+    if (!product) {
+        return (
+            <div className="container" style={{textAlign: 'center', padding: '50px'}}>
+                <h1>محصول مورد نظر یافت نشد!</h1>
+                <p>لطفاً آدرس را بررسی کنید یا به <Link href="/shop">فروشگاه</Link> مراجعه نمایید.</p>
+            </div>
+        );
+    }
+    
+    // حالا product حاوی داده‌های واقعی از Supabase است
     const hasDiscount = product.discountedPrice && product.discountedPrice < product.price;
 
     return (
@@ -55,20 +59,22 @@ export default function ProductPage({ params }) {
                     
                     {/* ستون چپ: گالری تصاویر */}
                     <div className="product-gallery">
-                        {/* تصویر اصلی */}
+                        {/* تصویر اصلی - استفاده از اولین URL از آرایه image_url */}
                         <div className="main-image">
-                            <Image 
-                                src={product.images[0]} 
-                                alt={product.name} 
-                                width={600} 
-                                height={600} 
-                                layout="responsive" 
-                                objectFit="cover"
-                            />
+                            {product.image_url && product.image_url.length > 0 && (
+                                <Image 
+                                    src={product.image_url[0]} 
+                                    alt={product.name} 
+                                    width={600} 
+                                    height={600} 
+                                    layout="responsive" 
+                                    objectFit="cover"
+                                />
+                            )}
                         </div>
                         {/* تصاویر کوچک (Thumbnail) */}
                         <div className="thumbnails">
-                            {product.images.map((imgSrc, index) => (
+                            {product.image_url && product.image_url.map((imgSrc, index) => (
                                 <Image 
                                     key={index}
                                     src={imgSrc} 
@@ -85,8 +91,8 @@ export default function ProductPage({ params }) {
                     <div className="product-info">
                         <h1>{product.name}</h1>
                         
+                        {/* امتیاز دهی (داده تستی) */}
                         <div className="rating">
-                            {/* آیکون ستاره‌ها برای امتیاز دهی */}
                             <i className="fa-solid fa-star"></i>
                             <i className="fa-solid fa-star"></i>
                             <i className="fa-solid fa-star"></i>
@@ -95,7 +101,7 @@ export default function ProductPage({ params }) {
                             <span className="review-count">(۳۲ دیدگاه)</span>
                         </div>
 
-                        <p className="short-description">{product.shortDescription}</p>
+                        <p className="short-description">{product.shortDescription || 'توضیحات کوتاه این محصول به زودی اضافه خواهد شد.'}</p>
 
                         {/* باکس قیمت */}
                         <div className="price-box product-page-price">
@@ -112,8 +118,9 @@ export default function ProductPage({ params }) {
                             </span>
                         </div>
                         
+                        {/* وضعیت موجودی (به فرض اضافه کردن ستون stock به دیتابیس) */}
                         <div className="stock-status">
-                            {product.stock > 0 ? (
+                            {product.stock && product.stock > 0 ? (
                                 <span className="in-stock"><i className="fa-solid fa-check"></i> موجود در انبار (موجودی: {product.stock})</span>
                             ) : (
                                 <span className="out-of-stock"><i className="fa-solid fa-xmark"></i> ناموجود</span>
@@ -124,20 +131,21 @@ export default function ProductPage({ params }) {
                         {product.stock > 0 && (
                             <div className="cart-actions">
                                 {/* کامپوننت Client برای مدیریت State تعداد */}
-                                <QuantitySelector initialQuantity={1} maxQuantity={product.stock} /> 
+                                <QuantitySelector initialQuantity={1} maxQuantity={product.stock || 10} /> 
                                 <button className="btn btn-primary btn-add-to-cart-page">
                                     <i className="fa-solid fa-cart-shopping"></i> افزودن به سبد خرید
                                 </button>
                             </div>
                         )}
 
-                        {/* ویژگی‌های کلیدی */}
+                        {/* ویژگی‌های کلیدی (به فرض اضافه کردن ستون features به دیتابیس) */}
                         <div className="product-features-list">
                             <h4>ویژگی‌های محصول:</h4>
                             <ul>
-                                {product.features.map((feature, index) => (
+                                {/* فرض می‌کنیم ویژگی‌ها در دیتابیس در یک آرایه متنی به نام 'features' ذخیره شده‌اند */}
+                                {product.features ? product.features.map((feature, index) => (
                                     <li key={index}><i className="fa-solid fa-circle-check"></i> {feature}</li>
-                                ))}
+                                )) : <li><i className="fa-solid fa-circle-check"></i> جزئیات فنی به زودی تکمیل خواهد شد.</li>}
                             </ul>
                         </div>
                     </div>
@@ -149,11 +157,7 @@ export default function ProductPage({ params }) {
                     <p className="full-description">{product.description}</p>
                     
                     <h3 className="tab-title">دیدگاه مشتریان</h3>
-                    {/* در پروژه واقعی، اینجا کامپوننت دیدگاه‌ها رندر می‌شود */}
-                    <div className="reviews-section">
-                        <p>هنوز دیدگاهی برای این محصول ثبت نشده است. اولین نفری باشید که نظر می‌دهد!</p>
-                        <button className="btn btn-primary">ثبت دیدگاه</button>
-                    </div>
+                    {/* ... بخش دیدگاه‌ها ... */}
                 </div>
 
             </div>

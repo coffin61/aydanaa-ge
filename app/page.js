@@ -1,9 +1,30 @@
 import Link from 'next/link';
-// کامپوننت ProductSlider که Client Component است و محصولات را نمایش می‌دهد
 import ProductSlider from '../components/ProductSlider'; 
-// در پروژه‌های واقعی، این داده‌ها از یک API یا پایگاه داده واکشی می‌شوند.
+import { supabase } from '../lib/supabase'; // 👈 اضافه کردن اتصال به دیتابیس
 
-export default function HomePage() {
+// ----------------------------------------------------
+// تابع واکشی داده از Supabase (اجرا در سمت سرور)
+// ----------------------------------------------------
+async function getProducts() {
+    // در اینجا می‌توانید فیلترهایی برای انتخاب "پیشنهاد ویژه" اعمال کنید
+    const { data: products, error } = await supabase
+        .from('products') // نام جدول ما
+        .select('*')      // انتخاب تمام ستون‌ها
+        .limit(6);        // محدود کردن به ۶ محصول برای اسلایدر
+
+    if (error) {
+        console.error("Error fetching products:", error);
+        // در صورت بروز خطا، یک آرایه خالی برمی‌گرداند تا سایت خراب نشود
+        return []; 
+    }
+    return products;
+}
+
+export default async function HomePage() {
+  
+  // فراخوانی تابع واکشی (Await) - این اتفاق در زمان ساخت (Build) یا درخواست (Request) رخ می‌دهد
+  const products = await getProducts();
+
   return (
     <>
       {/* ۱. بنر اصلی (Hero Section) */}
@@ -22,15 +43,14 @@ export default function HomePage() {
       </section>
 
       {/* ۲. پیشنهاد ویژه (اسلایدر محصولات) */}
-      {/* این کامپوننت محصولات را به صورت افقی قابل اسکرول (اسلایدر) نمایش می‌دهد */}
-      <ProductSlider /> 
+      {/* داده‌های واقعی (products) به کامپوننت Client ارسال می‌شوند */}
+      <ProductSlider products={products} /> 
 
       {/* ۳. بنرهای دسته‌بندی سه‌تایی */}
       <section className="section category-banners">
           <div className="container">
               <div className="banner-group">
                   <Link href="/category/jars" className="banner-item">
-                      {/* آدرس دهی به تصاویر در پوشه public/images */}
                       <img src="/images/placeholder-banner-1.jpg" alt="ظروف درب دار"/> 
                       <p>انواع ظروف درب دار</p>
                   </Link>

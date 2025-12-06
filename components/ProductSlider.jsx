@@ -1,30 +1,31 @@
 'use client';
-import ProductCard from './ProductCard'; // از کارت محصول مرحله قبل استفاده می‌کنیم
+import ProductCard from './ProductCard'; 
+// داده‌های تستی را حذف می‌کنیم
 
-// داده‌های تستی (جایگزین داده‌های دیتابیس شما)
-const dummyProducts = [
-    // داده‌های نمونه محصول ۱
-    { id: 1, name: 'بانکه سه تایی پروانه‌ای', slug: 'banke-parvane', price: 1320000, discountedPrice: 1290000, category: 'بانکه', images: ['/images/product-1.jpg'] },
-    // داده‌های نمونه محصول ۲
-    { id: 2, name: 'ست چای‌خوری گل‌دار', slug: 'tea-set-goli', price: 2500000, discountedPrice: 2250000, category: 'سرویس', images: ['/images/product-2.jpg'] },
-    // داده‌های نمونه محصول ۳
-    { id: 3, name: 'دیوارکوب کالیگرافی', slug: 'divarkoob-calli', price: 395000, discountedPrice: null, category: 'دکوراتیو', images: ['/images/product-3.jpg'] },
-    // داده‌های نمونه محصول ۴
-    { id: 4, name: 'لیوان آدمکی دست‌ساز', slug: 'livan-adamak', price: 470000, discountedPrice: 450000, category: 'لیوان', images: ['/images/product-4.jpg'] },
-    // اضافه کردن چند محصول دیگر برای پر کردن اسلایدر
-    { id: 5, name: 'کاسه بزرگ دست‌ساز', slug: 'kase-bozorg', price: 550000, discountedPrice: null, category: 'کاسه', images: ['/images/product-5.jpg'] },
-    { id: 6, name: 'شمع معطر سرامیکی', slug: 'sham-moatar', price: 180000, discountedPrice: 150000, category: 'شمع', images: ['/images/product-6.jpg'] },
-];
+// کامپوننت اکنون products را به عنوان props دریافت می‌کند
+const ProductSlider = ({ products }) => {
+    
+    // اگر محصولات در دسترس نبودند، چیزی نمایش نمی‌دهد
+    if (!products || products.length === 0) {
+        return <div className="section container">هیچ محصولی برای نمایش وجود ندارد.</div>;
+    }
 
-const ProductSlider = () => {
     return (
         <section className="section special-offers">
             <div className="container">
                 <h3 className="section-title">✨ شگفت‌انگیزترین پیشنهاد هفته ✨</h3>
                 <div className="product-slider-wrapper"> 
                     <div className="product-list is-slider"> 
-                        {dummyProducts.map(product => (
-                            <ProductCard key={product.id} product={product} />
+                        {/* نقشه کردن محصولات دریافت شده */}
+                        {products.map(product => (
+                            <ProductCard 
+                                key={product.id} 
+                                product={{
+                                    ...product,
+                                    // فرض می‌کنیم در دیتابیس price و image_url داریم
+                                    images: product.image_url 
+                                }}
+                            />
                         ))}
                     </div>
                 </div>
