@@ -1,0 +1,981 @@
+/* ------------------------------------- */
+/* ۱. تنظیمات اولیه و فونت‌ها (RTL Base) */
+/* ------------------------------------- */
+@font-face {
+    font-family: 'Vazir'; /* فونت دلخواه: Vazir/Samim/IranSans */
+    /* مطمئن شوید که فایل‌های فونت در مسیر public/fonts قرار دارند */
+    src: url('/fonts/Vazir.ttf') format('truetype'); 
+    font-weight: normal;
+}
+
+:root {
+    /* پالت رنگی */
+    --primary-color: #925c48; /* قهوه‌ای/کرمی اصلی */
+    --secondary-color: #f5f5f5; /* خاکستری روشن برای پس‌زمینه */
+    --text-color: #333;
+    --heading-color: #1a1a1a;
+    --white: #fff;
+    --border-color: #ddd;
+}
+
+body {
+    direction: rtl;
+    text-align: right;
+    font-family: 'Vazir', Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, .section-title {
+    color: var(--heading-color);
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.container {
+    width: 90%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--primary-color);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* دکمه‌های عمومی */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: #6a4436; 
+    color: var(--white);
+}
+
+
+/* ------------------------------------- */
+/* ۲. استایل‌های هدر و نوار ناوبری */
+/* ------------------------------------- */
+
+/* نوار بالایی */
+.top-bar {
+    background-color: #f1f1f1;
+    font-size: 0.85em;
+    padding: 10px 0;
+}
+
+.top-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contact-info i, .user-actions i {
+    margin-left: 5px;
+    color: var(--primary-color);
+}
+
+.user-actions a {
+    margin-right: 15px;
+}
+
+/* نوار اصلی ناوبری */
+.nav-bar {
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: 900;
+    color: var(--primary-color);
+}
+
+.cart-search-actions {
+    display: flex;
+    align-items: center;
+}
+
+.search-btn {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-left: 20px;
+    color: var(--text-color);
+}
+
+/* منوی اصلی */
+.main-menu ul {
+    display: flex;
+    gap: 25px;
+}
+
+.main-menu li {
+    position: relative;
+    padding: 10px 0;
+}
+
+.main-menu a {
+    font-weight: 500;
+}
+
+.main-menu .fa-chevron-down {
+    font-size: 0.6em;
+    margin-right: 5px;
+}
+
+/* زیرمنو (Submenu) */
+.submenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    min-width: 150px;
+    display: none; 
+    padding: 10px 0;
+}
+
+.main-menu li:hover > .submenu {
+    display: block; 
+}
+
+.submenu li {
+    padding: 0;
+    white-space: nowrap; 
+}
+
+.submenu a {
+    display: block;
+    padding: 8px 15px;
+    font-weight: normal;
+}
+
+.submenu a:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+/* ویجت سبد خرید */
+.cart-widget {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    padding: 8px 15px;
+    border-radius: 5px;
+    background-color: var(--secondary-color);
+    font-size: 0.95em;
+}
+
+.cart-widget i {
+    font-size: 1.2em;
+    margin-left: 10px;
+    color: var(--primary-color);
+}
+
+.cart-count {
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+
+/* ------------------------------------- */
+/* ۳. استایل‌های بخش اصلی (Main) */
+/* ------------------------------------- */
+
+.section {
+    padding: 40px 0;
+}
+
+.section-title {
+    text-align: center;
+    position: relative;
+    margin-bottom: 40px;
+    padding-bottom: 10px;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary-color);
+    position: absolute;
+    bottom: 0;
+    right: 50%;
+    transform: translateX(50%); 
+}
+
+/* بنر اصلی (Hero) */
+.hero-section {
+    background: url('/images/hero-bg.jpg') center center/cover no-repeat; 
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    padding-right: 5%;
+}
+
+.promo-box {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: 10px;
+    max-width: 400px;
+    text-align: right;
+}
+
+.promo-box h2 {
+    font-size: 1.8em;
+    margin-top: 0;
+}
+
+.features {
+    margin: 20px 0;
+}
+
+.features span {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.features i {
+    margin-left: 5px;
+}
+
+/* لیست و کارت محصولات (برای ProductCard.jsx) */
+
+/* استایل‌های لیست محصولات برای حالت اسلایدر */
+.product-slider-wrapper {
+    position: relative;
+}
+
+.product-list {
+    /* پیش‌فرض Grid در دسکتاپ */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 30px;
+}
+
+.product-list.is-slider {
+    /* Flexbox برای اسکرول افقی در دسکتاپ/موبایل */
+    display: flex;
+    gap: 30px;
+    overflow-x: auto; 
+    padding-bottom: 20px; 
+    
+    /* مخفی کردن نوار اسکرول */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.product-list.is-slider::-webkit-scrollbar {
+    display: none;
+}
+
+.product-list.is-slider .product-card {
+    /* ثابت نگه داشتن عرض کارت‌ها */
+    flex-shrink: 0; 
+    width: 280px; 
+}
+
+
+.product-card {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.product-card h4 {
+    font-size: 1.1em;
+    margin: 5px 10px;
+}
+
+.category-name {
+    font-size: 0.8em;
+    color: #999;
+}
+
+.badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.price-box {
+    margin: 10px 0;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: #999;
+    margin-left: 10px;
+    font-size: 0.9em;
+}
+
+.new-price {
+    color: red;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.btn-add-to-cart {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 8px 15px;
+    margin-top: 10px;
+}
+
+/* بنرهای دسته‌بندی سه‌تایی */
+.banner-group {
+    display: flex;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.banner-item {
+    flex: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    min-height: 200px;
+}
+
+.banner-item img {
+    width: 100%;
+    display: block;
+    height: 100%;
+    object-fit: cover;
+}
+
+.banner-item p {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--white);
+    padding: 10px;
+    margin: 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* بخش بلاگ */
+.post-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.post-card {
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.post-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.post-card h4, .post-card p, .post-card a {
+    padding: 0 15px;
+}
+
+.post-card h4 {
+    margin-top: 15px;
+}
+
+.read-more {
+    display: block;
+    padding-bottom: 15px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.read-more i {
+    margin-right: 5px;
+}
+
+
+/* ------------------------------------- */
+/* ۴. فوتر (Footer) */
+/* ------------------------------------- */
+
+.main-footer {
+    background-color: #222;
+    color: #ccc;
+    padding-top: 40px;
+}
+
+.footer-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #444;
+}
+
+.footer-col {
+    width: 25%;
+}
+
+.footer-col h4 {
+    color: var(--white);
+    position: relative;
+    padding-right: 15px;
+}
+
+/* خط کنار عنوان فوتر (ویژه RTL) */
+.footer-col h4::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 80%;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
+
+.footer-col li {
+    margin-bottom: 8px;
+}
+
+.contact-info-footer i {
+    margin-left: 8px;
+    color: var(--primary-color);
+}
+
+.social-links {
+    margin-top: 15px;
+}
+
+.social-links a {
+    font-size: 1.5em;
+    margin-left: 15px;
+    color: var(--primary-color);
+}
+
+.copyright {
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.85em;
+    background-color: #1a1a1a;
+    color: #999;
+}
+
+
+/* ------------------------------------- */
+/* ۵. واکنش‌گرایی (Responsive Design) */
+/* ------------------------------------- */
+
+/* تبلت (عرض ۹۹۲ پیکسل و کمتر) */
+@media (max-width: 992px) {
+    .main-menu {
+        /* منو در فضای کوچک‌تر خط می‌شکند */
+        flex-basis: 100%; 
+        order: 3;
+        margin-top: 15px;
+    }
+    .main-menu ul {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .nav-bar .container {
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .footer-columns {
+        flex-wrap: wrap;
+    }
+
+    .footer-col {
+        width: 45%; 
+        margin-bottom: 20px;
+    }
+}
+
+/* موبایل (عرض ۶۰۰ پیکسل و کمتر) */
+@media (max-width: 600px) {
+    .top-bar .container, .nav-bar .container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .nav-bar .container {
+        padding: 10px 0;
+    }
+
+    .user-actions {
+        margin-top: 10px;
+    }
+
+    /* دکمه همبرگری */
+    .menu-toggle-btn {
+        display: block; 
+        order: 2; 
+        margin: 5px 0;
+    }
+    .logo {
+        order: 1;
+    }
+    .cart-search-actions {
+        order: 3;
+        margin-top: 10px;
+    }
+
+    /* منوی اصلی در موبایل به صورت پیش‌فرض مخفی است */
+    .main-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+        width: 100%;
+        order: 4;
+        margin-top: 10px;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    /* کلاس is-open که توسط جاوااسکریپت اضافه می‌شود */
+    .main-menu.is-open {
+        max-height: 400px; /* باز شدن منو با انیمیشن */
+        padding-bottom: 10px;
+    }
+
+    .main-menu ul {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-top: 10px;
+    }
+
+    .main-menu li {
+        width: 100%;
+        margin-left: 0;
+        padding: 0;
+    }
+
+    .main-menu li a {
+        display: block;
+        padding: 10px 15px;
+    }
+
+    /* زیرمنو در حالت موبایل */
+    .submenu {
+        position: static;
+        box-shadow: none;
+        border: none;
+        background-color: #f9f9f9;
+        width: 100%;
+    }
+
+    .hero-section {
+        height: 350px;
+        justify-content: center;
+        padding: 0 5%;
+    }
+
+    .promo-box {
+        max-width: 90%;
+        padding: 20px;
+    }
+
+    .footer-col {
+        width: 100%; 
+    }
+}
+/* ------------------------------------- */
+/* ۶. استایل‌های صفحه محصول تکی */
+/* ------------------------------------- */
+
+.product-page {
+    padding: 30px 0;
+}
+
+.breadcrumb {
+    font-size: 0.9em;
+    color: #999;
+    margin-bottom: 20px;
+}
+.breadcrumb a {
+    color: #999;
+    margin-left: 5px;
+}
+.breadcrumb span {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.product-detail-grid {
+    display: flex;
+    gap: 40px;
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 10px;
+}
+
+/* گالری تصاویر */
+.product-gallery {
+    width: 50%;
+}
+
+.main-image {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.main-image img {
+    /* اطمینان از نمایش صحیح Image Next.js */
+    width: 100% !important; 
+    height: auto !important; 
+}
+
+.thumbnails {
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+}
+.thumbnails img {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    transition: border-color 0.2s;
+}
+.thumbnails img:hover {
+    border-color: var(--primary-color);
+}
+
+/* اطلاعات محصول */
+.product-info {
+    width: 50%;
+}
+
+.product-info h1 {
+    font-size: 2em;
+    margin-top: 0;
+}
+
+.rating i {
+    color: gold;
+    margin-left: 2px;
+}
+.review-count {
+    font-size: 0.9em;
+    color: #999;
+    margin-right: 10px;
+}
+
+.short-description {
+    font-size: 1.1em;
+    color: var(--text-color);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+/* باکس قیمت */
+.product-page-price {
+    padding: 15px 0;
+}
+.product-page-old-price {
+    font-size: 1.3em;
+    margin-left: 20px;
+}
+.current-price {
+    font-size: 1.8em;
+    color: var(--primary-color);
+    font-weight: 900;
+}
+
+.stock-status {
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+.in-stock {
+    color: green;
+}
+.out-of-stock {
+    color: red;
+}
+.stock-status i {
+    margin-left: 8px;
+}
+
+
+/* اکشن‌های سبد خرید */
+.cart-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.btn-add-to-cart-page {
+    font-size: 1.1em;
+    padding: 12px 25px;
+}
+.btn-add-to-cart-page i {
+    margin-left: 10px;
+}
+
+/* انتخابگر تعداد (Quantity Selector) */
+.quantity-selector {
+    display: flex;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    overflow: hidden;
+    width: 120px;
+}
+.qty-btn {
+    background: #f1f1f1;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1em;
+    color: var(--text-color);
+    flex-grow: 1;
+}
+.qty-input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    font-size: 1em;
+    font-weight: bold;
+    color: var(--heading-color);
+    padding: 10px 0;
+}
+.qty-input:focus {
+    outline: none;
+}
+.qty-btn:disabled {
+    cursor: not-allowed;
+    background-color: #ddd;
+}
+
+
+/* ویژگی‌های محصول */
+.product-features-list {
+    border-top: 1px dashed #ddd;
+    padding-top: 20px;
+}
+.product-features-list h4 {
+    color: var(--primary-color);
+    font-size: 1.1em;
+}
+.product-features-list li {
+    margin-bottom: 8px;
+}
+.product-features-list i {
+    margin-left: 8px;
+    color: var(--primary-color);
+}
+
+
+/* توضیحات کامل و دیدگاه‌ها (Tabs) */
+.product-tabs {
+    margin-top: 50px;
+    padding: 30px;
+    background-color: var(--white);
+    border-radius: 10px;
+}
+
+.tab-title {
+    color: var(--heading-color);
+    border-right: 4px solid var(--primary-color);
+    padding-right: 15px;
+    margin-bottom: 25px;
+    margin-top: 40px;
+}
+.tab-title:first-child {
+    margin-top: 0;
+}
+
+/* واکنش‌گرایی صفحه محصول */
+@media (max-width: 992px) {
+    .product-detail-grid {
+        flex-direction: column;
+    }
+    .product-gallery, .product-info {
+        width: 100%;
+    }
+    .cart-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .quantity-selector {
+        margin-bottom: 10px;
+    }
+}
+import Link from 'next/link';
+import ProductCard from '../../components/ProductCard'; 
+// در این صفحه از همان کامپوننت کارت محصول استفاده می‌کنیم
+
+// ----------------------------------------------------
+// داده‌های تستی کامل‌تر برای لیست محصولات
+// ----------------------------------------------------
+const allDummyProducts = [
+    { id: 1, name: 'بانکه سه تایی پروانه‌ای', slug: 'banke-parvane', price: 1320000, discountedPrice: 1290000, category: 'بانکه', images: ['/images/product-1.jpg'], color: 'کرم' },
+    { id: 2, name: 'ست چای‌خوری گل‌دار', slug: 'tea-set-goli', price: 2500000, discountedPrice: 2250000, category: 'سرویس', images: ['/images/product-2.jpg'], color: 'قرمز' },
+    { id: 3, name: 'دیوارکوب کالیگرافی', slug: 'divarkoob-calli', price: 395000, discountedPrice: null, category: 'دکوراتیو', images: ['/images/product-3.jpg'], color: 'آبی' },
+    { id: 4, name: 'لیوان آدمکی دست‌ساز', slug: 'livan-adamak', price: 470000, discountedPrice: 450000, category: 'لیوان', images: ['/images/product-4.jpg'], color: 'سفید' },
+    { id: 5, name: 'کاسه بزرگ دست‌ساز', slug: 'kase-bozorg', price: 550000, discountedPrice: null, category: 'کاسه', images: ['/images/product-5.jpg'], color: 'سفید' },
+    { id: 6, name: 'شمع معطر سرامیکی', slug: 'sham-moatar', price: 180000, discountedPrice: 150000, category: 'شمع', images: ['/images/product-6.jpg'], color: 'کرم' },
+    { id: 7, name: 'دیس پذیرایی مستطیلی', slug: 'dis-mostatili', price: 890000, discountedPrice: null, category: 'سرو و پذیرایی', images: ['/images/product-7.jpg'], color: 'فیروزه ای' },
+    { id: 8, name: 'گلدان مینیمال کوچک', slug: 'goldan-minimal', price: 210000, discountedPrice: null, category: 'دکوراتیو', images: ['/images/product-8.jpg'], color: 'طوسی' },
+];
+
+export default function ShopPage() {
+
+    const products = allDummyProducts; // نمایش همه محصولات تستی
+
+    return (
+        <div className="shop-page">
+            <div className="container">
+                {/* مسیر یابی (Breadcrumb) */}
+                <div className="breadcrumb">
+                    <Link href="/">خانه</Link> / 
+                    <span>فروشگاه محصولات سرامیکی</span>
+                </div>
+                
+                <h2>فروشگاه محصولات سرامیکی آیدانا</h2>
+
+                <div className="shop-grid">
+                    
+                    {/* ۱. ستون کناری (Sidebar) برای فیلترها */}
+                    <aside className="sidebar">
+                        <div className="filter-box">
+                            <h3><i className="fa-solid fa-filter"></i> فیلتر محصولات</h3>
+
+                            {/* فیلتر دسته‌بندی */}
+                            <div className="filter-group">
+                                <h4>دسته‌بندی‌ها</h4>
+                                <ul>
+                                    <li><Link href="/category/all">همه محصولات (۸)</Link></li>
+                                    <li><Link href="/category/decorative">دکوراتیو (۲)</Link></li>
+                                    <li><Link href="/category/serving">سرو و پذیرایی (۳)</Link></li>
+                                    <li><Link href="/category/jars">بانکه و شمع (۲)</Link></li>
+                                </ul>
+                            </div>
+                            
+                            {/* فیلتر قیمت (در یک Client Component پیچیده‌تر است) */}
+                            <div className="filter-group">
+                                <h4>محدوده قیمت</h4>
+                                {/* اینجا در یک پروژه واقعی باید یک کامپوننت اسلایدر قیمت قرار بگیرد */}
+                                <input type="range" min="100000" max="3000000" step="10000" />
+                                <p>از ۱۸۰,۰۰۰ تا ۲,۵۰۰,۰۰۰ تومان</p>
+                            </div>
+
+                            {/* فیلتر رنگ */}
+                            <div className="filter-group">
+                                <h4>رنگ</h4>
+                                <div className="color-options">
+                                    <span className="color-dot white" title="سفید"></span>
+                                    <span className="color-dot cream" title="کرم"></span>
+                                    <span className="color-dot blue" title="آبی"></span>
+                                    <span className="color-dot gray" title="طوسی"></span>
+                                    <span className="color-dot red" title="قرمز"></span>
+                                </div>
+                            </div>
+                            
+                            <button className="btn btn-primary filter-btn">اعمال فیلتر</button>
+                        </div>
+                    </aside>
+
+                    {/* ۲. ستون اصلی محتوا و محصولات */}
+                    <section className="shop-content">
+                        
+                        {/* نوار مرتب‌سازی و نمایش */}
+                        <div className="toolbar">
+                            <span className="product-count">{products.length} محصول یافت شد.</span>
+                            <div className="sort-options">
+                                <label htmlFor="sort">مرتب‌سازی بر اساس:</label>
+                                <select id="sort" className="sort-dropdown">
+                                    <option value="default">پیش‌فرض</option>
+                                    <option value="price-asc">ارزان‌ترین</option>
+                                    <option value="price-desc">گران‌ترین</option>
+                                    <option value="newest">جدیدترین</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* لیست محصولات */}
+                        <div className="product-list category-list">
+                            {products.map(product => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                        
+                        {/* pagination - صفحه‌بندی (برای حجم بالای محصولات) */}
+                        <div className="pagination">
+                            <Link href="#" className="page-link current">۱</Link>
+                            <Link href="#" className="page-link">۲</Link>
+                            <Link href="#" className="page-link">۳</Link>
+                            <Link href="#" className="page-link next-prev"><i className="fa-solid fa-chevron-left"></i></Link>
+                        </div>
+
+                    </section>
+                </div>
+            </div>
+        </div>
+    );
+}
