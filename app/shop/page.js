@@ -1,16 +1,18 @@
 // app/shop/page.js
 import Link from 'next/link';
 import ProductCard from '../../components/ProductCard'; 
-import { supabase } from '../../lib/supabase'; // 👈 اضافه کردن اتصال به دیتابیس
+import { supabase } from '../../lib/supabase';
+import { unstable_noStore as noStore } from 'next/cache'; // 👈 ایمپورت جدید
 
 // ----------------------------------------------------
 // تابع واکشی تمام محصولات از Supabase
 // ----------------------------------------------------
 async function getAllProducts() {
+    noStore(); // 👈 اضافه کردن این خط
+    
     const { data: products, error } = await supabase
         .from('products') 
         .select('*');      
-        // در اینجا هیچ محدودیت یا فیلتری اعمال نمی‌کنیم تا همه محصولات بیایند
 
     if (error) {
         console.error("Error fetching all products:", error);
@@ -36,12 +38,12 @@ export default async function ShopPage() {
 
                 <div className="shop-grid">
                     
-                    {/* ۱. ستون کناری (Sidebar) برای فیلترها (این بخش نیازمند Client Component و منطق فیلتر است) */}
+                    {/* ۱. ستون کناری (Sidebar) برای فیلترها (به صورت استاتیک) */}
                     <aside className="sidebar">
                         <div className="filter-box">
                             <h3><i className="fa-solid fa-filter"></i> فیلتر محصولات</h3>
 
-                            {/* فیلتر دسته‌بندی (داده تستی) */}
+                            {/* فیلتر دسته‌بندی */}
                             <div className="filter-group">
                                 <h4>دسته‌بندی‌ها</h4>
                                 <ul>
@@ -52,14 +54,14 @@ export default async function ShopPage() {
                                 </ul>
                             </div>
                             
-                            {/* فیلتر قیمت (داده تستی) */}
+                            {/* فیلتر قیمت */}
                             <div className="filter-group">
                                 <h4>محدوده قیمت</h4>
                                 <input type="range" min="100000" max="3000000" step="10000" />
                                 <p>از ۱۸۰,۰۰۰ تا ۲,۵۰۰,۰۰۰ تومان</p>
                             </div>
 
-                            {/* فیلتر رنگ (داده تستی) */}
+                            {/* فیلتر رنگ */}
                             <div className="filter-group">
                                 <h4>رنگ</h4>
                                 <div className="color-options">
@@ -85,7 +87,6 @@ export default async function ShopPage() {
                                 <label htmlFor="sort">مرتب‌سازی بر اساس:</label>
                                 <select id="sort" className="sort-dropdown">
                                     <option value="default">پیش‌فرض</option>
-                                    {/* در یک پروژه واقعی، انتخاب این گزینه باید یک فیلتر جدید به Supabase بفرستد */}
                                     <option value="price-asc">ارزان‌ترین</option>
                                     <option value="price-desc">گران‌ترین</option>
                                 </select>
@@ -99,13 +100,13 @@ export default async function ShopPage() {
                                     key={product.id} 
                                     product={{
                                         ...product,
-                                        images: product.image_url // نگاشت image_url به images برای سازگاری با ProductCard
+                                        images: product.image_url 
                                     }}
                                 />
                             ))}
                         </div>
                         
-                        {/* pagination - صفحه‌بندی (داده تستی) */}
+                        {/* pagination - صفحه‌بندی (استاتیک) */}
                         <div className="pagination">
                             <Link href="#" className="page-link current">۱</Link>
                             <Link href="#" className="page-link">۲</Link>
