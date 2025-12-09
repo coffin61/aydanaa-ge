@@ -1,4 +1,5 @@
 // app/product/[slug]/page.js
+// این همان نسخه‌ای است که قبلاً به شما دادم و شامل تمام رفع خطاهاست
 
 import Link from 'next/link';
 import ProductCard from '../../../components/ProductCard';
@@ -18,7 +19,6 @@ export async function generateStaticParams() {
 
         if (error) {
             console.error("Supabase Error fetching slugs for static params:", error);
-            // در صورت خطای Supabase، آرایه خالی برمی‌گرداند تا Build نشکند.
             return []; 
         }
         
@@ -27,7 +27,6 @@ export async function generateStaticParams() {
             slug: product.slug,
         }));
     } catch (e) {
-        // در صورت خطای شبکه یا خطای پارس JSON، Build را از شکست نجات می‌دهد.
         console.error("Critical Catch: Network or Parsing error during generateStaticParams:", e);
         return [];
     }
@@ -48,7 +47,6 @@ async function getProduct(slug) {
             .single();
 
         if (error) {
-            // اگر محصولی با این اسلاگ پیدا نشود (خطای 404 یا خطا در دیتابیس)
             console.error(`Error fetching product with slug ${slug}:`, error);
             return null;
         }
