@@ -1,7 +1,10 @@
+// app/layout.js
+
 import { Inter } from 'next/font/google';
 import './globals.css';
-import Header from '../components/Header'; // مسیردهی صحیح به کامپوننت Header
-import Footer from '../components/Footer'; // مسیردهی صحیح به کامپوننت Footer
+// مسیردهی‌های زیر را با دقت بررسی کنید، اگر Header و Footer در پوشه components هستند، مسیردهی زیر صحیح است.
+import Header from '../components/Header'; 
+import Footer from '../components/Footer'; 
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,16 +17,18 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fa" dir="rtl">
       <body className={inter.className}>
-        {/* Header در اینجا قرار می‌گیرد تا بالای همه صفحات باشد */}
+        
+        {/* Header در اینجا قرار می‌گیرد */}
         <Header /> 
         
-        {/* محتوای هر صفحه (page.js) از طریق children اینجا رندر می‌شود */}
+        {/* محتوای هر صفحه از طریق children در تگ main رندر می‌شود */}
         <main>
           {children}
         </main>
         
         {/* Footer در اینجا قرار می‌گیرد */}
         <Footer />
+        
       </body>
     </html>
   );
