@@ -1,9 +1,8 @@
 // app/product/[slug]/page.js
-// این همان نسخه‌ای است که قبلاً به شما دادم و شامل تمام رفع خطاهاست
 
 import Link from 'next/link';
 import ProductCard from '../../../components/ProductCard';
-import { supabase } from '../../../lib/supabase';
+import { supabase } from '../../../lib/supabase'; // مسیردهی سه سطح به عقب: صحیح برای app/product/[slug]/page.js
 import { unstable_noStore as noStore } from 'next/cache';
 
 // ----------------------------------------------------
@@ -12,9 +11,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 export async function generateStaticParams() {
     noStore(); 
 
-    // استفاده از try/catch برای جلوگیری از شکست Build به دلیل خطاهای شبکه/JSON
     try {
-        // اصلاح نام جدول: aydanaa
         const { data: products, error } = await supabase.from('aydanaa').select('slug');
 
         if (error) {
@@ -22,7 +19,6 @@ export async function generateStaticParams() {
             return []; 
         }
         
-        // تبدیل لیست محصولات به فرمت مورد نیاز Next.js
         return products.map((product) => ({
             slug: product.slug,
         }));
@@ -33,13 +29,12 @@ export async function generateStaticParams() {
 }
 
 // ----------------------------------------------------
-// ۲. تابع واکشی داده برای یک محصول خاص (با مدیریت خطا)
+// ۲. تابع واکشی داده برای یک محصول خاص
 // ----------------------------------------------------
 async function getProduct(slug) {
     noStore();
 
     try {
-        // اصلاح نام جدول: aydanaa
         const { data: product, error } = await supabase
             .from('aydanaa') 
             .select('*')
@@ -58,13 +53,12 @@ async function getProduct(slug) {
 }
 
 // ----------------------------------------------------
-// ۳. تابع واکشی محصولات مشابه (با مدیریت خطا)
+// ۳. تابع واکشی محصولات مشابه
 // ----------------------------------------------------
 async function getRelatedProducts(currentProductId) {
     noStore(); 
 
     try {
-        // اصلاح نام جدول: aydanaa
         const { data: products, error } = await supabase
             .from('aydanaa')
             .select('*')
@@ -90,7 +84,6 @@ export default async function ProductDetailPage({ params }) {
     
     const product = await getProduct(params.slug);
     
-    // اگر محصول پیدا نشد، پیام مناسب نمایش داده می‌شود
     if (!product) {
         return (
              <div className="container" style={{padding: '50px 0', textAlign: 'center'}}>
@@ -101,8 +94,6 @@ export default async function ProductDetailPage({ params }) {
     }
     
     const relatedProducts = await getRelatedProducts(product.id);
-    
-    const productImages = [product.image_url, product.image_url];
     
     return (
         <div className="product-detail-page">
@@ -119,7 +110,6 @@ export default async function ProductDetailPage({ params }) {
                     {/* گالری تصاویر */}
                     <div className="product-gallery">
                         <div className="main-image">
-                            {/* فرض می‌کنیم product.name و product.image_url معتبر هستند */}
                             <img src={product.image_url} alt={product.name} /> 
                         </div>
                     </div>
@@ -127,42 +117,13 @@ export default async function ProductDetailPage({ params }) {
                     {/* اطلاعات محصول */}
                     <div className="product-info">
                         <h1>{product.name}</h1>
-                        <div className="rating">
-                            <i className="fa-solid fa-star"></i>
-                            <i className="fa-solid fa-star"></i>
-                            <i className="fa-solid fa-star"></i>
-                            <i className="fa-solid fa-star-half-stroke"></i>
-                            <i className="fa-regular fa-star"></i>
-                            <span className="review-count">(۳۴ نظر)</span>
-                        </div>
-                        
-                        <p className="short-description">{product.description}</p>
-                        
                         <div className="price-box product-page-price">
-                             {/* اگر تخفیف دارد */}
                              {product.old_price && <span className="old-price">{product.old_price.toLocaleString()} تومان</span>}
                              <span className="current-price">{product.price.toLocaleString()} تومان</span>
                         </div>
                         
-                        <div className="stock-status">
-                            <span className="in-stock">
-                                <i className="fa-solid fa-check"></i> موجود در انبار
-                            </span>
-                        </div>
-                        
                         <div className="cart-actions">
-                            <button className="btn btn-primary btn-add-to-cart-page">
-                                <i className="fa-solid fa-cart-shopping"></i> افزودن به سبد خرید
-                            </button>
-                        </div>
-                        
-                        <div className="product-features-list">
-                            <h4>ویژگی‌های کلیدی</h4>
-                            <ul>
-                                <li><i className="fa-solid fa-check-circle"></i> قابل شستشو و مقاوم</li>
-                                <li><i className="fa-solid fa-check-circle"></i> ساخت ایران، کار دست</li>
-                                <li><i className="fa-solid fa-check-circle"></i> ارسال مطمئن</li>
-                            </ul>
+                            <button className="btn btn-primary btn-add-to-cart-page">افزودن به سبد خرید</button>
                         </div>
                     </div>
                 </div>

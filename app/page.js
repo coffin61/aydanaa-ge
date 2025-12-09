@@ -2,16 +2,17 @@
 
 import { unstable_noStore as noStore } from 'next/cache';
 import Link from 'next/link';
-import { supabase } from '../lib/supabase'; // مطمئن شوید مسیر ایمپورت supabase درست است
-// import YourComponent from '../components/YourComponent'; // کامپوننت‌های UI خود را اینجا ایمپورت کنید
+import { supabase } from '../lib/supabase'; // مسیردهی یک سطح به عقب: صحیح برای app/page.js
+// import ProductCard from '../components/ProductCard'; // کامپوننت‌های خود را ایمپورت کنید
+// import HeroSection from '../components/HeroSection'; 
+
 
 // ----------------------------------------------------
-// مثال: تابع واکشی محصولات جدید (با استفاده از noStore و try...catch)
+// مثال: تابع واکشی محصولات جدید
 // ----------------------------------------------------
 async function getNewArrivals() {
-    noStore(); // برای اطمینان از واکشی داده‌های جدید در هر درخواست (SSR)
+    noStore(); 
     try {
-        // حتماً نام جدول را به 'aydanaa' تغییر دهید
         const { data: products, error } = await supabase
             .from('aydanaa')
             .select('*')
@@ -24,7 +25,6 @@ async function getNewArrivals() {
         }
         return products;
     } catch (e) {
-        // مدیریت خطاهای شبکه یا پارس JSON در زمان اجرا
         console.error("Critical Catch: Error fetching new arrivals:", e);
         return [];
     }
@@ -34,28 +34,30 @@ async function getNewArrivals() {
 // کامپوننت اصلی صفحه
 // ----------------------------------------------------
 export default async function HomePage() {
-    // ⚠️ اگر در صفحه اصلی از واکشی داده استفاده می‌کنید، آن را اینجا فراخوانی کنید
+    // ⚠️ خطوط واکشی داده را uncomment کنید:
     // const newArrivals = await getNewArrivals();
     
     return (
         <div className="homepage-content">
-            {/* ⚠️ محتوای اصلی و کامل صفحه خانگی (شامل Header, Hero Section و لیست محصولات) 
-                   که قبلاً در این فایل داشتید را اینجا جایگزین کنید.
-            */}
+            {/* ⚠️ محتوای کامل و اصلی UI خود را اینجا قرار دهید */}
             
+            {/* مثال بخش Hero (که در آخرین تصویر دیده شد): */}
             <section className="hero-section" style={{ minHeight: '400px', backgroundColor: '#f0f0f0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <h1>به فروشگاه صراحی خوش آمدید</h1>
                 <p>ظروف دست‌ساز و با کیفیت.</p>
+                {/* دکمه مشاهده محصولات */}
                 <Link href="/shop" className="btn btn-primary" style={{ padding: '10px 20px', backgroundColor: '#333', color: 'white', textDecoration: 'none', borderRadius: '5px', marginTop: '15px' }}>مشاهده محصولات</Link>
             </section>
             
+            {/* ⚠️ بخش محصولات جدید را بر اساس منطق خود uncomment کنید: */}
             {/* {newArrivals.length > 0 && (
                  <section className="new-arrivals">
                       <h2>جدیدترین محصولات</h2>
-                      {... نمایش محصولات جدید با کامپوننت ProductCard ...}
+                      <div className="product-list">
+                         {newArrivals.map(product => <ProductCard key={product.id} product={product} />)}
+                      </div>
                  </section>
-            )}
-            */}
+            )} */}
 
         </div>
     );

@@ -1,6 +1,6 @@
 // app/shop/page.js
 
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/supabase'; // مسیردهی دو سطح به عقب: صحیح برای app/shop/page.js
 import ProductCard from '../../components/ProductCard';
 import { unstable_noStore as noStore } from 'next/cache';
 
@@ -10,9 +10,8 @@ import { unstable_noStore as noStore } from 'next/cache';
 async function getAllProducts() {
     noStore();
     try {
-        // حتماً نام جدول را به 'aydanaa' تغییر دهید
         const { data: products, error } = await supabase
-            .from('aydanaa')
+            .from('aydanaa') // نام جدول اصلاح شده
             .select('*'); 
 
         if (error) {
@@ -40,13 +39,13 @@ export default async function ShopPage() {
                 <p style={{textAlign: 'center'}}>محصولی برای نمایش وجود ندارد یا خطایی در اتصال به دیتابیس رخ داده است.</p>
             ) : (
                 <div className="product-list-grid">
-                    {/* ⚠️ کامپوننت‌های ProductCard خود را اینجا رندر کنید */}
+                    {/* رندر ProductCard‌ها */}
                     {products.map(product => (
                         <ProductCard 
                             key={product.id} 
                             product={{
                                 ...product,
-                                images: product.image_url // یا آرایه تصاویر واقعی
+                                images: product.image_url 
                             }} 
                         />
                     ))}
