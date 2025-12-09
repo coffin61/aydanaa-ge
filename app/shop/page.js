@@ -1,6 +1,6 @@
 // app/shop/page.js
 
-import { supabase } from '../../../lib/supabase';
+import { supabase } from '../../lib/supabase';
 import ProductCard from '../../components/ProductCard';
 import { unstable_noStore as noStore } from 'next/cache';
 
