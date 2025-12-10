@@ -50,9 +50,3 @@ export default async function ShopPage() {
         </div>
     );
 }
-/* app/globals.css - به انتهای فایل اضافه شود */
-/* این کد را برای تست اضافه کنید تا دکمه شما بالاتر از هر لایه دیگری قرار گیرد */
-.hero-section a.btn-primary {
-    position: relative !important;
-    z-index: 10000 !important;
-}
