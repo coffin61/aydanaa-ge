@@ -1,35 +1,58 @@
-// app/layout.js
+// app/shop/page.js
 
-import { Inter } from 'next/font/google';
-import './globals.css';
-// مسیردهی‌های زیر را با دقت بررسی کنید، اگر Header و Footer در پوشه components هستند، مسیردهی زیر صحیح است.
-import Header from '../components/Header'; 
-import Footer from '../components/Footer'; 
+import { supabase } from '../../lib/supabase'; // مسیردهی دو سطح به عقب: صحیح برای app/shop/page.js
+import ProductCard from '../../components/ProductCard';
+import { unstable_noStore as noStore } from 'next/cache';
 
-const inter = Inter({ subsets: ['latin'] });
+// تابع واکشی تمام محصولات (با مدیریت خطا)
+async function getAllProducts() {
+    noStore();
+    try {
+        const { data: products, error } = await supabase
+            .from('aydanaa') // نام جدول اصلاح شده
+            .select('*'); 
 
-export const metadata = {
-  title: 'فروشگاه سرامیک صراحی',
-  description: 'فروشگاه آنلاین ظروف دست‌ساز سرامیکی',
-};
+        if (error) {
+            console.error("Error fetching all products:", error);
+            return [];
+        }
+        return products;
+    } catch (e) {
+        console.error("Critical Catch: Error fetching all products:", e);
+        return [];
+    }
+}
 
-export default function RootLayout({ children }) {
-  return (
-    <html lang="fa" dir="rtl">
-      <body className={inter.className}>
-        
-        {/* Header در اینجا قرار می‌گیرد */}
-        <Header /> 
-        
-        {/* محتوای هر صفحه از طریق children در تگ main رندر می‌شود */}
-        <main>
-          {children}
-        </main>
-        
-        {/* Footer در اینجا قرار می‌گیرد */}
-        <Footer />
-        
-      </body>
-    </html>
-  );
+// کامپوننت اصلی صفحه
+export default async function ShopPage() {
+    const products = await getAllProducts();
+
+    return (
+        <div className="container shop-page">
+            <h1 style={{padding: '30px 0'}}>فروشگاه</h1>
+            
+            {products.length === 0 ? (
+                <p style={{textAlign: 'center'}}>محصولی برای نمایش وجود ندارد یا خطایی در اتصال به دیتابیس رخ داده است.</p>
+            ) : (
+                <div className="product-list-grid">
+                    {/* رندر ProductCard‌ها */}
+                    {products.map(product => (
+                        <ProductCard 
+                            key={product.id} 
+                            product={{
+                                ...product,
+                                images: product.image_url 
+                            }} 
+                        />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+/* app/globals.css - به انتهای فایل اضافه شود */
+/* این کد را برای تست اضافه کنید تا دکمه شما بالاتر از هر لایه دیگری قرار گیرد */
+.hero-section a.btn-primary {
+    position: relative !important;
+    z-index: 10000 !important;
 }
